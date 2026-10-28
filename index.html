@@ -1,0 +1,3401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LADIN L. ACALUL | Computer Engineer</title>
+
+    <meta name="description"
+          content="Ladin L. Acalul — Computer Engineering graduate, technical support professional, and technology enthusiast.">
+
+    <style>
+
+        /* =========================================================
+           ROOT
+        ========================================================= */
+
+        :root {
+            --green: #00ff66;
+            --green-dark: #00a83f;
+            --green-soft: #65ff9a;
+            --black: #020504;
+            --black-2: #050a07;
+            --panel: rgba(0, 20, 10, 0.72);
+            --border: rgba(0, 255, 102, 0.25);
+            --text: #d7ffe5;
+            --muted: #75a987;
+            --danger: #ff3c3c;
+
+            --font-main:
+                "Courier New",
+                Courier,
+                monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        html {
+            background: var(--black);
+        }
+
+        body {
+            background:
+                radial-gradient(
+                    circle at 50% -10%,
+                    rgba(0, 255, 102, 0.10),
+                    transparent 40%
+                ),
+                var(--black);
+
+            color: var(--text);
+            font-family: var(--font-main);
+
+            overflow-x: hidden;
+
+            cursor: none;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font-family: inherit;
+        }
+
+
+        /* =========================================================
+           CUSTOM CURSOR
+           ========================================================= */
+
+        .cursor {
+            position: fixed;
+
+            width: 12px;
+            height: 12px;
+
+            border: 1px solid var(--green);
+            border-radius: 50%;
+
+            pointer-events: none;
+
+            z-index: 99999;
+
+            transform: translate(-50%, -50%);
+
+            box-shadow:
+                0 0 10px var(--green),
+                0 0 20px rgba(0, 255, 102, 0.4);
+
+            transition:
+                width 0.15s,
+                height 0.15s;
+        }
+
+        .cursor-dot {
+            position: fixed;
+
+            width: 3px;
+            height: 3px;
+
+            background: var(--green);
+
+            border-radius: 50%;
+
+            pointer-events: none;
+
+            z-index: 100000;
+
+            transform: translate(-50%, -50%);
+
+            box-shadow: 0 0 10px var(--green);
+        }
+
+
+        /* =========================================================
+           MATRIX BACKGROUND
+           ========================================================= */
+
+        #matrix {
+            position: fixed;
+
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            opacity: 0.12;
+
+            pointer-events: none;
+
+            z-index: -5;
+        }
+
+
+        /* =========================================================
+           SCANLINES
+           ========================================================= */
+
+        body::before {
+            content: "";
+
+            position: fixed;
+
+            inset: 0;
+
+            pointer-events: none;
+
+            z-index: 9998;
+
+            background:
+                repeating-linear-gradient(
+                    to bottom,
+                    rgba(255,255,255,0.015) 0px,
+                    rgba(255,255,255,0.015) 1px,
+                    transparent 1px,
+                    transparent 4px
+                );
+
+            opacity: 0.35;
+        }
+
+
+        /* =========================================================
+           LOADING SCREEN
+           ========================================================= */
+
+        #boot {
+            position: fixed;
+
+            inset: 0;
+
+            background: #000;
+
+            z-index: 999999;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 30px;
+
+            transition:
+                opacity 0.8s ease,
+                visibility 0.8s ease;
+        }
+
+        #boot.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .boot-terminal {
+            width: min(900px, 100%);
+
+            color: var(--green);
+
+            font-size: 14px;
+
+            line-height: 1.8;
+
+            text-shadow:
+                0 0 5px var(--green),
+                0 0 15px rgba(0,255,102,0.5);
+        }
+
+        .boot-line {
+            opacity: 0;
+
+            animation:
+                bootLine 0.15s forwards;
+        }
+
+        @keyframes bootLine {
+            to {
+                opacity: 1;
+            }
+        }
+
+
+        /* =========================================================
+           NAVIGATION
+           ========================================================= */
+
+        header {
+            position: fixed;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+
+            z-index: 500;
+
+            backdrop-filter: blur(15px);
+
+            background:
+                rgba(0, 5, 2, 0.78);
+
+            border-bottom:
+                1px solid var(--border);
+        }
+
+        .nav {
+            width: min(1200px, 92%);
+
+            margin: auto;
+
+            height: 75px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 18px;
+
+            font-weight: bold;
+
+            letter-spacing: 2px;
+
+            color: var(--green);
+
+            text-shadow:
+                0 0 10px var(--green);
+        }
+
+        .logo span {
+            color: #fff;
+        }
+
+        .nav-links {
+            display: flex;
+
+            gap: 25px;
+
+            list-style: none;
+        }
+
+        .nav-links a {
+            position: relative;
+
+            color: #a6d9b6;
+
+            font-size: 13px;
+
+            transition: 0.3s;
+        }
+
+        .nav-links a::before {
+            content: "> ";
+
+            opacity: 0;
+
+            color: var(--green);
+
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--green);
+
+            text-shadow:
+                0 0 10px var(--green);
+        }
+
+        .nav-links a:hover::before {
+            opacity: 1;
+        }
+
+
+        /* =========================================================
+           GENERAL
+           ========================================================= */
+
+        .container {
+            width: min(1150px, 90%);
+
+            margin: auto;
+        }
+
+        section {
+            padding: 120px 0;
+
+            position: relative;
+        }
+
+        .section-title {
+            margin-bottom: 55px;
+        }
+
+        .section-title .small {
+            color: var(--green);
+
+            font-size: 12px;
+
+            letter-spacing: 3px;
+
+            margin-bottom: 10px;
+        }
+
+        .section-title h2 {
+            font-size: clamp(28px, 5vw, 48px);
+
+            color: white;
+
+            text-shadow:
+                0 0 15px rgba(0,255,102,0.3);
+        }
+
+        .section-title h2 span {
+            color: var(--green);
+        }
+
+        .section-title .line {
+            margin-top: 15px;
+
+            width: 100px;
+
+            height: 2px;
+
+            background: var(--green);
+
+            box-shadow:
+                0 0 15px var(--green);
+        }
+
+
+        /* =========================================================
+           HERO
+           ========================================================= */
+
+        #home {
+            min-height: 100vh;
+
+            display: flex;
+
+            align-items: center;
+
+            padding-top: 120px;
+        }
+
+        .hero {
+            display: grid;
+
+            grid-template-columns: 1.3fr 0.7fr;
+
+            gap: 60px;
+
+            align-items: center;
+        }
+
+        .terminal-label {
+            display: inline-block;
+
+            color: var(--green);
+
+            border: 1px solid var(--border);
+
+            padding: 8px 13px;
+
+            margin-bottom: 25px;
+
+            background: rgba(0,255,102,0.03);
+
+            box-shadow:
+                inset 0 0 20px rgba(0,255,102,0.03);
+        }
+
+        .hero h1 {
+            font-size: clamp(40px, 7vw, 85px);
+
+            line-height: 0.95;
+
+            color: white;
+
+            letter-spacing: -4px;
+
+            margin-bottom: 25px;
+        }
+
+        .hero h1 span {
+            color: var(--green);
+
+            text-shadow:
+                0 0 15px rgba(0,255,102,0.7),
+                0 0 35px rgba(0,255,102,0.3);
+        }
+
+        .typing {
+            color: var(--green-soft);
+
+            font-size: clamp(15px, 2vw, 20px);
+
+            margin-bottom: 25px;
+
+            min-height: 30px;
+        }
+
+        .hero-description {
+            max-width: 650px;
+
+            color: #9fc5ab;
+
+            line-height: 1.9;
+
+            font-size: 15px;
+        }
+
+
+        /* =========================================================
+           HERO BUTTONS
+           ========================================================= */
+
+        .hero-buttons {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 15px;
+
+            margin-top: 35px;
+        }
+
+        .btn {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 8px;
+
+            padding: 13px 20px;
+
+            border: 1px solid var(--green);
+
+            background: rgba(0,255,102,0.04);
+
+            color: var(--green);
+
+            cursor: none;
+
+            transition: 0.3s;
+
+            font-size: 13px;
+        }
+
+        .btn:hover {
+            background: var(--green);
+
+            color: black;
+
+            box-shadow:
+                0 0 15px rgba(0,255,102,0.7),
+                0 0 40px rgba(0,255,102,0.2);
+
+            transform: translateY(-3px);
+        }
+
+        .btn.primary {
+            background: var(--green);
+
+            color: black;
+
+            font-weight: bold;
+        }
+
+
+        /* =========================================================
+           HUD CARD
+           ========================================================= */
+
+        .hud {
+            position: relative;
+
+            min-height: 350px;
+
+            border:
+                1px solid var(--border);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(0,255,102,0.05),
+                    rgba(0,0,0,0.5)
+                );
+
+            padding: 25px;
+
+            box-shadow:
+                inset 0 0 40px rgba(0,255,102,0.03),
+                0 0 30px rgba(0,255,102,0.05);
+        }
+
+        .hud::before,
+        .hud::after {
+            content: "";
+
+            position: absolute;
+
+            width: 20px;
+            height: 20px;
+
+            border-color: var(--green);
+
+            border-style: solid;
+        }
+
+        .hud::before {
+            top: -1px;
+            left: -1px;
+
+            border-width: 2px 0 0 2px;
+        }
+
+        .hud::after {
+            right: -1px;
+            bottom: -1px;
+
+            border-width: 0 2px 2px 0;
+        }
+
+        .hud-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            padding-bottom: 15px;
+
+            border-bottom: 1px solid var(--border);
+
+            color: var(--green);
+
+            font-size: 12px;
+        }
+
+        .status {
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: var(--green);
+
+            box-shadow:
+                0 0 10px var(--green);
+
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .hud-content {
+            margin-top: 25px;
+        }
+
+        .hud-row {
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding: 11px 0;
+
+            border-bottom:
+                1px dashed rgba(0,255,102,0.1);
+
+            font-size: 12px;
+        }
+
+        .hud-row span:first-child {
+            color: #588d68;
+        }
+
+        .hud-row span:last-child {
+            color: var(--green-soft);
+
+            text-align: right;
+        }
+
+
+        /* =========================================================
+           ABOUT
+           ========================================================= */
+
+        .about-grid {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 40px;
+        }
+
+        .terminal-box {
+            border:
+                1px solid var(--border);
+
+            background:
+                rgba(0, 15, 7, 0.7);
+
+            padding: 25px;
+
+            box-shadow:
+                inset 0 0 35px rgba(0,255,102,0.02);
+        }
+
+        .terminal-top {
+            display: flex;
+
+            gap: 7px;
+
+            margin-bottom: 25px;
+        }
+
+        .terminal-top i {
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: var(--green);
+        }
+
+        .terminal-code {
+            color: #86bd98;
+
+            line-height: 1.9;
+
+            font-size: 13px;
+        }
+
+        .terminal-code .green {
+            color: var(--green);
+        }
+
+        .terminal-code .white {
+            color: white;
+        }
+
+        .info-grid {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 15px;
+
+            margin-top: 25px;
+        }
+
+        .info-card {
+            padding: 20px;
+
+            border:
+                1px solid var(--border);
+
+            background:
+                rgba(0,255,102,0.02);
+
+            transition: 0.3s;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+
+            border-color: var(--green);
+
+            box-shadow:
+                0 0 20px rgba(0,255,102,0.08);
+        }
+
+        .info-card small {
+            color: #568e67;
+        }
+
+        .info-card p {
+            color: var(--green-soft);
+
+            margin-top: 7px;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================================================
+           SKILLS
+           ========================================================= */
+
+        .skills-grid {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 30px;
+        }
+
+        .skill {
+            margin-bottom: 25px;
+        }
+
+        .skill-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 9px;
+
+            font-size: 13px;
+        }
+
+        .skill-header span:first-child {
+            color: #c4ebcf;
+        }
+
+        .skill-header span:last-child {
+            color: var(--green);
+        }
+
+        .skill-bar {
+            height: 5px;
+
+            background:
+                rgba(0,255,102,0.08);
+
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+
+            width: 0;
+
+            background: var(--green);
+
+            box-shadow:
+                0 0 12px var(--green);
+
+            transition:
+                width 1.5s cubic-bezier(.2,.8,.2,1);
+        }
+
+
+        /* =========================================================
+           EXPERIENCE
+           ========================================================= */
+
+        .timeline {
+            position: relative;
+
+            max-width: 900px;
+
+            margin: auto;
+        }
+
+        .timeline::before {
+            content: "";
+
+            position: absolute;
+
+            left: 12px;
+
+            top: 0;
+            bottom: 0;
+
+            width: 1px;
+
+            background:
+                linear-gradient(
+                    var(--green),
+                    transparent
+                );
+
+            box-shadow:
+                0 0 10px var(--green);
+        }
+
+        .experience {
+            position: relative;
+
+            padding-left: 50px;
+
+            margin-bottom: 50px;
+        }
+
+        .experience::before {
+            content: "";
+
+            position: absolute;
+
+            left: 7px;
+            top: 6px;
+
+            width: 11px;
+            height: 11px;
+
+            border-radius: 50%;
+
+            background: var(--green);
+
+            box-shadow:
+                0 0 10px var(--green),
+                0 0 25px rgba(0,255,102,0.4);
+        }
+
+        .experience-date {
+            color: var(--green);
+
+            font-size: 12px;
+
+            letter-spacing: 1px;
+
+            margin-bottom: 10px;
+        }
+
+        .experience h3 {
+            color: white;
+
+            font-size: 19px;
+
+            margin-bottom: 6px;
+        }
+
+        .experience-company {
+            color: #669c75;
+
+            font-size: 13px;
+
+            margin-bottom: 12px;
+        }
+
+        .experience p {
+            color: #89ad94;
+
+            line-height: 1.7;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================================================
+           EDUCATION
+           ========================================================= */
+
+        .education-card {
+            position: relative;
+
+            padding: 35px;
+
+            border:
+                1px solid var(--border);
+
+            background:
+                linear-gradient(
+                    120deg,
+                    rgba(0,255,102,0.05),
+                    rgba(0,0,0,0.4)
+                );
+
+            overflow: hidden;
+        }
+
+        .education-card::after {
+            content: "BSC-CPE";
+
+            position: absolute;
+
+            right: -30px;
+            bottom: -20px;
+
+            font-size: 100px;
+
+            font-weight: bold;
+
+            color: rgba(0,255,102,0.025);
+
+            pointer-events: none;
+        }
+
+        .education-card .year {
+            color: var(--green);
+
+            font-size: 13px;
+
+            margin-bottom: 15px;
+        }
+
+        .education-card h3 {
+            color: white;
+
+            font-size: 24px;
+
+            margin-bottom: 10px;
+        }
+
+        .education-card p {
+            color: #77a986;
+
+            line-height: 1.8;
+        }
+
+
+        /* =========================================================
+           CERTIFICATIONS
+           ========================================================= */
+
+        .cert-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 15px;
+        }
+
+        .cert {
+            position: relative;
+
+            padding: 25px;
+
+            border:
+                1px solid var(--border);
+
+            min-height: 140px;
+
+            background:
+                rgba(0,255,102,0.025);
+
+            transition: 0.3s;
+        }
+
+        .cert:hover {
+            border-color: var(--green);
+
+            transform:
+                translateY(-6px)
+                rotateX(3deg);
+
+            box-shadow:
+                0 10px 30px rgba(0,255,102,0.08);
+        }
+
+        .cert-number {
+            color: var(--green);
+
+            font-size: 11px;
+
+            margin-bottom: 20px;
+        }
+
+        .cert h3 {
+            color: #d4ffe0;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+        .cert p {
+            color: #578665;
+
+            margin-top: 8px;
+
+            font-size: 11px;
+        }
+
+
+        /* =========================================================
+           LANGUAGES
+           ========================================================= */
+
+        .languages {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
+        }
+
+        .language {
+            border:
+                1px solid var(--border);
+
+            padding: 25px;
+
+            text-align: center;
+
+            transition: 0.3s;
+        }
+
+        .language:hover {
+            border-color: var(--green);
+
+            box-shadow:
+                0 0 25px rgba(0,255,102,0.08);
+        }
+
+        .language h3 {
+            color: white;
+
+            margin-bottom: 12px;
+        }
+
+        .language span {
+            color: var(--green);
+
+            font-size: 12px;
+        }
+
+
+        /* =========================================================
+           CONTACT
+           ========================================================= */
+
+        .contact-grid {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 30px;
+        }
+
+        .contact-card {
+            border:
+                1px solid var(--border);
+
+            padding: 30px;
+
+            background:
+                rgba(0,255,102,0.025);
+        }
+
+        .contact-item {
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+
+            padding: 18px 0;
+
+            border-bottom:
+                1px solid rgba(0,255,102,0.08);
+        }
+
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            border:
+                1px solid var(--border);
+
+            color: var(--green);
+        }
+
+        .contact-item small {
+            display: block;
+
+            color: #568565;
+
+            margin-bottom: 5px;
+        }
+
+        .contact-item a,
+        .contact-item span {
+            color: #c9f8d6;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================================================
+           TERMINAL COMMAND
+           ========================================================= */
+
+        .command-terminal {
+            border:
+                1px solid var(--border);
+
+            background:
+                rgba(0,0,0,0.7);
+
+            min-height: 320px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 0 30px rgba(0,255,102,0.03);
+        }
+
+        .terminal-output {
+            min-height: 240px;
+
+            color: #8ec89d;
+
+            font-size: 13px;
+
+            line-height: 1.8;
+
+            overflow-y: auto;
+        }
+
+        .terminal-output .command {
+            color: white;
+        }
+
+        .terminal-output .response {
+            color: var(--green);
+        }
+
+        .command-input {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            border-top:
+                1px solid var(--border);
+
+            padding-top: 15px;
+        }
+
+        .command-input span {
+            color: var(--green);
+        }
+
+        #terminalInput {
+            flex: 1;
+
+            background: transparent;
+
+            border: none;
+
+            outline: none;
+
+            color: white;
+
+            font-family: inherit;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================================================
+           FOOTER
+           ========================================================= */
+
+        footer {
+            border-top:
+                1px solid var(--border);
+
+            padding: 30px 0;
+
+            text-align: center;
+
+            color: #4f7b5b;
+
+            font-size: 11px;
+        }
+
+        footer strong {
+            color: var(--green);
+        }
+
+
+        /* =========================================================
+           SCROLL REVEAL
+           ========================================================= */
+
+        .reveal {
+            opacity: 0;
+
+            transform:
+                translateY(30px);
+
+            transition:
+                opacity 0.8s ease,
+                transform 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+
+            transform:
+                translateY(0);
+        }
+
+
+        /* =========================================================
+           GLITCH
+           ========================================================= */
+
+        .glitch {
+            position: relative;
+        }
+
+        .glitch:hover {
+            animation:
+                glitch 0.2s linear infinite;
+        }
+
+        @keyframes glitch {
+
+            0% {
+                transform: translate(0);
+            }
+
+            25% {
+                transform: translate(-2px, 1px);
+            }
+
+            50% {
+                transform: translate(2px, -1px);
+            }
+
+            75% {
+                transform: translate(-1px, -1px);
+            }
+
+            100% {
+                transform: translate(0);
+            }
+        }
+
+
+        /* =========================================================
+           MOBILE
+           ========================================================= */
+
+        @media (max-width: 850px) {
+
+            body {
+                cursor: auto;
+            }
+
+            .cursor,
+            .cursor-dot {
+                display: none;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .about-grid,
+            .skills-grid,
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cert-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .languages {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                letter-spacing: -2px;
+            }
+        }
+
+        @media (max-width: 550px) {
+
+            section {
+                padding: 90px 0;
+            }
+
+            .cert-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .hud {
+                min-height: auto;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<!-- =============================================================
+     MATRIX CANVAS
+     ============================================================= -->
+
+<canvas id="matrix"></canvas>
+
+
+<!-- =============================================================
+     CUSTOM CURSOR
+     ============================================================= -->
+
+<div class="cursor"></div>
+<div class="cursor-dot"></div>
+
+
+<!-- =============================================================
+     BOOT SCREEN
+     ============================================================= -->
+
+<div id="boot">
+
+    <div class="boot-terminal">
+
+        <div class="boot-line">
+            [ SYSTEM ] Initializing portfolio kernel...
+        </div>
+
+        <div class="boot-line">
+            [ SYSTEM ] Loading user profile...
+        </div>
+
+        <div class="boot-line">
+            [ SYSTEM ] Loading Computer Engineering module...
+        </div>
+
+        <div class="boot-line">
+            [ SYSTEM ] Loading technical support experience...
+        </div>
+
+        <div class="boot-line">
+            [ SYSTEM ] Loading certifications...
+        </div>
+
+        <div class="boot-line">
+            [ SECURITY ] Firewall status: ACTIVE
+        </div>
+
+        <div class="boot-line">
+            [ NETWORK ] Connection established.
+        </div>
+
+        <div class="boot-line">
+            [ ACCESS ] Welcome, visitor.
+        </div>
+
+        <div class="boot-line">
+            [ SYSTEM ] Portfolio successfully initialized.
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =============================================================
+     NAVIGATION
+     ============================================================= -->
+
+<header>
+
+    <nav class="nav">
+
+        <a href="#home" class="logo">
+            LADIN<span>_</span>ACALUL
+        </a>
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="#home">HOME</a>
+            </li>
+
+            <li>
+                <a href="#about">ABOUT</a>
+            </li>
+
+            <li>
+                <a href="#experience">EXPERIENCE</a>
+            </li>
+
+            <li>
+                <a href="#skills">SKILLS</a>
+            </li>
+
+            <li>
+                <a href="#education">EDUCATION</a>
+            </li>
+
+            <li>
+                <a href="#contact">CONTACT</a>
+            </li>
+
+        </ul>
+
+    </nav>
+
+</header>
+
+
+<!-- =============================================================
+     HERO
+     ============================================================= -->
+
+<section id="home">
+
+    <div class="container">
+
+        <div class="hero">
+
+            <div>
+
+                <div class="terminal-label">
+                    > SYSTEM.ACCESS_GRANTED_
+                </div>
+
+                <h1 class="glitch">
+                    LADIN L.<br>
+                    <span>ACALUL</span>
+                </h1>
+
+                <div class="typing">
+                    > <span id="typingText"></span><span>|</span>
+                </div>
+
+                <p class="hero-description">
+                    Dedicated and enthusiastic aspiring Computer Engineer
+                    with strong organizational abilities, technical
+                    knowledge, customer service experience, and a
+                    commitment to contributing to team success.
+                </p>
+
+                <div class="hero-buttons">
+
+                    <a
+                        href="#experience"
+                        class="btn primary"
+                    >
+                        [ VIEW EXPERIENCE ]
+                    </a>
+
+                    <a
+                        href="#contact"
+                        class="btn"
+                    >
+                        [ CONNECT ]
+                    </a>
+
+                    <button
+                        class="btn"
+                        onclick="downloadResume()"
+                    >
+                        [ DOWNLOAD CV ]
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- HUD -->
+
+            <div class="hud reveal">
+
+                <div class="hud-header">
+
+                    <span>
+                        USER_PROFILE.exe
+                    </span>
+
+                    <div class="status">
+
+                        <span class="status-dot"></span>
+
+                        ONLINE
+
+                    </div>
+
+                </div>
+
+                <div class="hud-content">
+
+                    <div class="hud-row">
+
+                        <span>IDENTITY</span>
+
+                        <span>LADIN L. ACALUL</span>
+
+                    </div>
+
+                    <div class="hud-row">
+
+                        <span>FIELD</span>
+
+                        <span>COMPUTER ENGINEERING</span>
+
+                    </div>
+
+                    <div class="hud-row">
+
+                        <span>LOCATION</span>
+
+                        <span>PASAY CITY, PH</span>
+
+                    </div>
+
+                    <div class="hud-row">
+
+                        <span>STATUS</span>
+
+                        <span>AVAILABLE</span>
+
+                    </div>
+
+                    <div class="hud-row">
+
+                        <span>LANGUAGE_01</span>
+
+                        <span>ENGLISH</span>
+
+                    </div>
+
+                    <div class="hud-row">
+
+                        <span>LANGUAGE_02</span>
+
+                        <span>TAGALOG</span>
+
+                    </div>
+
+                    <div class="hud-row">
+
+                        <span>LANGUAGE_03</span>
+
+                        <span>SPANISH</span>
+
+                    </div>
+
+                    <div class="hud-row">
+
+                        <span>SECURITY</span>
+
+                        <span>CYBERSECURITY BASICS</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =============================================================
+     ABOUT
+     ============================================================= -->
+
+<section id="about">
+
+    <div class="container">
+
+        <div class="section-title reveal">
+
+            <div class="small">
+                // 01 — PROFILE
+            </div>
+
+            <h2>
+                ABOUT <span>ME</span>
+            </h2>
+
+            <div class="line"></div>
+
+        </div>
+
+
+        <div class="about-grid">
+
+            <div class="terminal-box reveal">
+
+                <div class="terminal-top">
+
+                    <i></i>
+                    <i></i>
+                    <i></i>
+
+                </div>
+
+                <div class="terminal-code">
+
+                    <p>
+                        <span class="green">root@ladin</span>:~$
+                        whoami
+                    </p>
+
+                    <br>
+
+                    <p class="white">
+                        Ladin L. Acalul
+                    </p>
+
+                    <p>
+                        Computer Engineering Graduate
+                    </p>
+
+                    <p>
+                        Technology & Customer Support Professional
+                    </p>
+
+                    <br>
+
+                    <p>
+                        <span class="green">root@ladin</span>:~$
+                        cat objective.txt
+                    </p>
+
+                    <br>
+
+                    <p>
+                        Dedicated and enthusiastic aspiring Computer
+                        Engineer with robust organizational abilities,
+                        eager to contribute to team success and
+                        company objectives.
+                    </p>
+
+                    <br>
+
+                    <p>
+                        <span class="green">root@ladin</span>:~$
+                        _
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-grid reveal">
+
+                <div class="info-card">
+
+                    <small>DATE OF BIRTH</small>
+
+                    <p>
+                        21 February 2001
+                    </p>
+
+                </div>
+
+                <div class="info-card">
+
+                    <small>NATIONALITY</small>
+
+                    <p>
+                        Philippine
+                    </p>
+
+                </div>
+
+                <div class="info-card">
+
+                    <small>MARITAL STATUS</small>
+
+                    <p>
+                        Single
+                    </p>
+
+                </div>
+
+                <div class="info-card">
+
+                    <small>LOCATION</small>
+
+                    <p>
+                        Pasay City, Philippines
+                    </p>
+
+                </div>
+
+                <div class="info-card">
+
+                    <small>EDUCATION</small>
+
+                    <p>
+                        BS Computer Engineering
+                    </p>
+
+                </div>
+
+                <div class="info-card">
+
+                    <small>TECH DOMAIN</small>
+
+                    <p>
+                        IT / Support / Computer
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =============================================================
+     EXPERIENCE
+     ============================================================= -->
+
+<section id="experience">
+
+    <div class="container">
+
+        <div class="section-title reveal">
+
+            <div class="small">
+                // 02 — CAREER_LOG
+            </div>
+
+            <h2>
+                WORK <span>EXPERIENCE</span>
+            </h2>
+
+            <div class="line"></div>
+
+        </div>
+
+
+        <div class="timeline">
+
+
+            <div class="experience reveal">
+
+                <div class="experience-date">
+                    AUG 2023 — NOV 2023
+                </div>
+
+                <h3>
+                    Tech Support
+                </h3>
+
+                <div class="experience-company">
+                    Zamboanga City Water District
+                </div>
+
+                <p>
+                    Technical support experience involving
+                    technology-related assistance and organizational
+                    responsibilities.
+                </p>
+
+            </div>
+
+
+            <div class="experience reveal">
+
+                <div class="experience-date">
+                    AUG 2024 — SEP 2024
+                </div>
+
+                <h3>
+                    Crew / Frontliner
+                </h3>
+
+                <div class="experience-company">
+                    KCC Mall de Zamboanga
+                </div>
+
+                <p>
+                    Frontline customer-facing experience with a focus
+                    on communication, service, and daily operational
+                    responsibilities.
+                </p>
+
+            </div>
+
+
+            <div class="experience reveal">
+
+                <div class="experience-date">
+                    DEC 2024 — FEB 2025
+                </div>
+
+                <h3>
+                    Merchandiser
+                </h3>
+
+                <div class="experience-company">
+                    Acabar Marketing International Inc.
+                </div>
+
+                <p>
+                    Merchandising and operational experience involving
+                    organization, scheduling, and customer-oriented
+                    responsibilities.
+                </p>
+
+            </div>
+
+
+            <div class="experience reveal">
+
+                <div class="experience-date">
+                    APR 2025 — JUL 2025
+                </div>
+
+                <h3>
+                    Customer Service Representative
+                </h3>
+
+                <div class="experience-company">
+                    Alorica by the Bay
+                </div>
+
+                <p>
+                    Customer service experience in a professional
+                    business-process environment.
+                </p>
+
+            </div>
+
+
+            <div class="experience reveal">
+
+                <div class="experience-date">
+                    AUG 2025 — APR 2026
+                </div>
+
+                <h3>
+                    Customer Service Representative
+                </h3>
+
+                <div class="experience-company">
+                    Foundever Ortigas
+                </div>
+
+                <p>
+                    Customer service role focused on communication,
+                    problem solving, multitasking, and customer support.
+                </p>
+
+            </div>
+
+
+            <div class="experience reveal">
+
+                <div class="experience-date">
+                    MAY 2026 — PRESENT
+                </div>
+
+                <h3>
+                    Customer Service Representative
+                </h3>
+
+                <div class="experience-company">
+                    Access Healthcare Pasay
+                </div>
+
+                <p>
+                    Customer service professional responsible for
+                    handling customer concerns and maintaining service
+                    quality.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =============================================================
+     SKILLS
+     ============================================================= -->
+
+<section id="skills">
+
+    <div class="container">
+
+        <div class="section-title reveal">
+
+            <div class="small">
+                // 03 — SYSTEM_CAPABILITIES
+            </div>
+
+            <h2>
+                CORE <span>SKILLS</span>
+            </h2>
+
+            <div class="line"></div>
+
+        </div>
+
+
+        <div class="skills-grid">
+
+
+            <div class="reveal">
+
+                <div class="skill">
+
+                    <div class="skill-header">
+
+                        <span>
+                            Computer Literacy
+                        </span>
+
+                        <span>
+                            90%
+                        </span>
+
+                    </div>
+
+                    <div class="skill-bar">
+
+                        <div
+                            class="skill-progress"
+                            data-width="90%"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="skill">
+
+                    <div class="skill-header">
+
+                        <span>
+                            Computer Systems
+                        </span>
+
+                        <span>
+                            85%
+                        </span>
+
+                    </div>
+
+                    <div class="skill-bar">
+
+                        <div
+                            class="skill-progress"
+                            data-width="85%"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="skill">
+
+                    <div class="skill-header">
+
+                        <span>
+                            Customer Service
+                        </span>
+
+                        <span>
+                            90%
+                        </span>
+
+                    </div>
+
+                    <div class="skill-bar">
+
+                        <div
+                            class="skill-progress"
+                            data-width="90%"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="reveal">
+
+                <div class="skill">
+
+                    <div class="skill-header">
+
+                        <span>
+                            Organization
+                        </span>
+
+                        <span>
+                            90%
+                        </span>
+
+                    </div>
+
+                    <div class="skill-bar">
+
+                        <div
+                            class="skill-progress"
+                            data-width="90%"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="skill">
+
+                    <div class="skill-header">
+
+                        <span>
+                            Strategic Planning
+                        </span>
+
+                        <span>
+                            80%
+                        </span>
+
+                    </div>
+
+                    <div class="skill-bar">
+
+                        <div
+                            class="skill-progress"
+                            data-width="80%"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="skill">
+
+                    <div class="skill-header">
+
+                        <span>
+                            Multitasking
+                        </span>
+
+                        <span>
+                            90%
+                        </span>
+
+                    </div>
+
+                    <div class="skill-bar">
+
+                        <div
+                            class="skill-progress"
+                            data-width="90%"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =============================================================
+     EDUCATION
+     ============================================================= -->
+
+<section id="education">
+
+    <div class="container">
+
+        <div class="section-title reveal">
+
+            <div class="small">
+                // 04 — ACADEMIC_DATABASE
+            </div>
+
+            <h2>
+                <span>EDUCATION</span>
+            </h2>
+
+            <div class="line"></div>
+
+        </div>
+
+
+        <div class="education-card reveal">
+
+            <div class="year">
+                2020 — 2024
+            </div>
+
+            <h3>
+                Bachelor of Science in Computer Engineering
+            </h3>
+
+            <p>
+                UZ — Universidad de Zamboanga
+            </p>
+
+            <br>
+
+            <p>
+                Philippines
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =============================================================
+     CERTIFICATIONS
+     ============================================================= -->
+
+<section id="certifications">
+
+    <div class="container">
+
+        <div class="section-title reveal">
+
+            <div class="small">
+                // 05 — CERTIFICATION_DATABASE
+            </div>
+
+            <h2>
+                CERTS & <span>ACHIEVEMENTS</span>
+            </h2>
+
+            <div class="line"></div>
+
+        </div>
+
+
+        <div class="cert-grid">
+
+
+            <div class="cert reveal">
+
+                <div class="cert-number">
+                    CERT_001
+                </div>
+
+                <h3>
+                    Service Award 2024
+                </h3>
+
+            </div>
+
+
+            <div class="cert reveal">
+
+                <div class="cert-number">
+                    CERT_002
+                </div>
+
+                <h3>
+                    Best in Research Project
+                </h3>
+
+            </div>
+
+
+            <div class="cert reveal">
+
+                <div class="cert-number">
+                    CERT_003
+                </div>
+
+                <h3>
+                    Best in Research Paper
+                </h3>
+
+            </div>
+
+
+            <div class="cert reveal">
+
+                <div class="cert-number">
+                    CERT_004
+                </div>
+
+                <h3>
+                    Cybersecurity Essentials:
+                    Cybersecurity Basics
+                </h3>
+
+                <p>
+                    2023
+                </p>
+
+            </div>
+
+
+            <div class="cert reveal">
+
+                <div class="cert-number">
+                    CERT_005
+                </div>
+
+                <h3>
+                    CCNAv7:
+                    Introduction to Networks,
+                    Switching & Routing,
+                    Enterprise Networking
+                </h3>
+
+                <p>
+                    2022
+                </p>
+
+            </div>
+
+
+            <div class="cert reveal">
+
+                <div class="cert-number">
+                    CERT_006
+                </div>
+
+                <h3>
+                    Linux Essentials
+                </h3>
+
+                <p>
+                    2024
+                </p>
+
+            </div>
+
+
+            <div class="cert reveal">
+
+                <div class="cert-number">
+                    CERT_007
+                </div>
+
+                <h3>
+                    CSS Computer System Servicing NC II
+                </h3>
+
+                <p>
+                    2024
+                </p>
+
+            </div>
+
+
+            <div class="cert reveal">
+
+                <div class="cert-number">
+                    CERT_008
+                </div>
+
+                <h3>
+                    BOSH Safety Officer II
+                </h3>
+
+                <p>
+                    2024
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =============================================================
+     LANGUAGES
+     ============================================================= -->
+
+<section>
+
+    <div class="container">
+
+        <div class="section-title reveal">
+
+            <div class="small">
+                // 06 — LANGUAGE_MODULE
+            </div>
+
+            <h2>
+                LANGUAGE <span>PROTOCOLS</span>
+            </h2>
+
+            <div class="line"></div>
+
+        </div>
+
+
+        <div class="languages">
+
+
+            <div class="language reveal">
+
+                <h3>
+                    ENGLISH
+                </h3>
+
+                <span>
+                    FLUENT
+                </span>
+
+            </div>
+
+
+            <div class="language reveal">
+
+                <h3>
+                    TAGALOG
+                </h3>
+
+                <span>
+                    NATIVE
+                </span>
+
+            </div>
+
+
+            <div class="language reveal">
+
+                <h3>
+                    SPANISH
+                </h3>
+
+                <span>
+                    INTERMEDIATE
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =============================================================
+     TERMINAL
+     ============================================================= -->
+
+<section>
+
+    <div class="container">
+
+        <div class="section-title reveal">
+
+            <div class="small">
+                // 07 — INTERACTIVE_TERMINAL
+            </div>
+
+            <h2>
+                <span>TERMINAL</span> ACCESS
+            </h2>
+
+            <div class="line"></div>
+
+        </div>
+
+
+        <div class="command-terminal reveal">
+
+            <div
+                class="terminal-output"
+                id="terminalOutput"
+            >
+
+                <div>
+                    LADIN OS [Version 2.0.26]
+                </div>
+
+                <div>
+                    Type <span class="response">help</span>
+                    to display available commands.
+                </div>
+
+                <br>
+
+            </div>
+
+
+            <div class="command-input">
+
+                <span>
+                    root@ladin:~$
+                </span>
+
+                <input
+                    type="text"
+                    id="terminalInput"
+                    autocomplete="off"
+                    placeholder="type a command..."
+                >
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =============================================================
+     CONTACT
+     ============================================================= -->
+
+<section id="contact">
+
+    <div class="container">
+
+        <div class="section-title reveal">
+
+            <div class="small">
+                // 08 — COMMUNICATION_CHANNEL
+            </div>
+
+            <h2>
+                CONTACT <span>ME</span>
+            </h2>
+
+            <div class="line"></div>
+
+        </div>
+
+
+        <div class="contact-grid">
+
+
+            <div class="contact-card reveal">
+
+
+                <div class="contact-item">
+
+                    <div class="contact-icon">
+                        @
+                    </div>
+
+                    <div>
+
+                        <small>
+                            EMAIL
+                        </small>
+
+                        <a
+                            href="mailto:ladinacalul07@gmail.com"
+                        >
+                            ladinacalul07@gmail.com
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <div class="contact-item">
+
+                    <div class="contact-icon">
+                        #
+                    </div>
+
+                    <div>
+
+                        <small>
+                            PHONE
+                        </small>
+
+                        <span>
+                            09126766884
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="contact-item">
+
+                    <div class="contact-icon">
+                        /
+                    </div>
+
+                    <div>
+
+                        <small>
+                            LOCATION
+                        </small>
+
+                        <span>
+                            Pasay City, Philippines
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="btn"
+                    style="margin-top:25px;width:100%;"
+                    onclick="copyEmail()"
+                >
+                    [ COPY EMAIL ]
+                </button>
+
+
+            </div>
+
+
+            <div class="terminal-box reveal">
+
+                <div class="terminal-top">
+
+                    <i></i>
+                    <i></i>
+                    <i></i>
+
+                </div>
+
+                <div class="terminal-code">
+
+                    <p>
+                        <span class="green">
+                            root@ladin
+                        </span>:~$ connect
+                    </p>
+
+                    <br>
+
+                    <p>
+                        Looking for a professional who combines
+                        technical knowledge, customer service,
+                        organization, and adaptability?
+                    </p>
+
+                    <br>
+
+                    <p>
+                        <span class="green">
+                            CONNECTION_READY
+                        </span>
+                    </p>
+
+                    <br>
+
+                    <p>
+                        Email:
+                        <span class="white">
+                            ladinacalul07@gmail.com
+                        </span>
+                    </p>
+
+                    <br>
+
+                    <p>
+                        <span class="green">
+                            root@ladin
+                        </span>:~$ _
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =============================================================
+     FOOTER
+     ============================================================= -->
+
+<footer>
+
+    <div class="container">
+
+        <p>
+            SYSTEM_STATUS:
+            <strong>ONLINE</strong>
+        </p>
+
+        <br>
+
+        <p>
+            © 2026 LADIN L. ACALUL —
+            COMPUTER ENGINEERING PORTFOLIO
+        </p>
+
+    </div>
+
+</footer>
+
+
+<!-- =============================================================
+     JAVASCRIPT
+     ============================================================= -->
+
+<script>
+
+    /* =========================================================
+       BOOT SCREEN
+       ========================================================= */
+
+    window.addEventListener("load", () => {
+
+        const bootLines =
+            document.querySelectorAll(".boot-line");
+
+        bootLines.forEach((line, index) => {
+
+            line.style.animationDelay =
+                `${index * 0.35}s`;
+
+        });
+
+        setTimeout(() => {
+
+            document
+                .getElementById("boot")
+                .classList
+                .add("hide");
+
+        }, 3800);
+
+    });
+
+
+    /* =========================================================
+       MATRIX EFFECT
+       ========================================================= */
+
+    const canvas =
+        document.getElementById("matrix");
+
+    const ctx =
+        canvas.getContext("2d");
+
+    let width =
+        canvas.width =
+        window.innerWidth;
+
+    let height =
+        canvas.height =
+        window.innerHeight;
+
+    const characters =
+        "01ABCDEFGHIJKLMNOPQRSTUVWXYZ<>[]{}#$%&@";
+
+    const fontSize = 14;
+
+    let columns =
+        Math.floor(width / fontSize);
+
+    let drops =
+        Array(columns).fill(1);
+
+
+    function drawMatrix() {
+
+        ctx.fillStyle =
+            "rgba(0, 0, 0, 0.055)";
+
+        ctx.fillRect(
+            0,
+            0,
+            width,
+            height
+        );
+
+        ctx.font =
+            fontSize + "px monospace";
+
+        ctx.fillStyle =
+            "#00ff66";
+
+        for (
+            let i = 0;
+            i < drops.length;
+            i++
+        ) {
+
+            const char =
+                characters[
+                    Math.floor(
+                        Math.random() *
+                        characters.length
+                    )
+                ];
+
+            ctx.fillText(
+                char,
+                i * fontSize,
+                drops[i] * fontSize
+            );
+
+            if (
+                drops[i] * fontSize >
+                    height &&
+                Math.random() > 0.975
+            ) {
+
+                drops[i] = 0;
+
+            }
+
+            drops[i]++;
+
+        }
+
+    }
+
+    setInterval(drawMatrix, 45);
+
+
+    window.addEventListener(
+        "resize",
+        () => {
+
+            width =
+                canvas.width =
+                window.innerWidth;
+
+            height =
+                canvas.height =
+                window.innerHeight;
+
+            columns =
+                Math.floor(
+                    width / fontSize
+                );
+
+            drops =
+                Array(columns).fill(1);
+
+        }
+    );
+
+
+    /* =========================================================
+       TYPING EFFECT
+       ========================================================= */
+
+    const typingElement =
+        document.getElementById(
+            "typingText"
+        );
+
+    const phrases = [
+
+        "Computer Engineering Graduate",
+
+        "Technical Support Professional",
+
+        "Customer Service Specialist",
+
+        "Technology Enthusiast",
+
+        "Problem Solver"
+
+    ];
+
+    let phraseIndex = 0;
+    let characterIndex = 0;
+
+    let deleting = false;
+
+
+    function typeEffect() {
+
+        const current =
+            phrases[phraseIndex];
+
+        if (!deleting) {
+
+            typingElement.textContent =
+                current.substring(
+                    0,
+                    characterIndex + 1
+                );
+
+            characterIndex++;
+
+            if (
+                characterIndex ===
+                current.length
+            ) {
+
+                deleting = true;
+
+                setTimeout(
+                    typeEffect,
+                    1300
+                );
+
+                return;
+
+            }
+
+        } else {
+
+            typingElement.textContent =
+                current.substring(
+                    0,
+                    characterIndex - 1
+                );
+
+            characterIndex--;
+
+            if (
+                characterIndex === 0
+            ) {
+
+                deleting = false;
+
+                phraseIndex =
+                    (phraseIndex + 1)
+                    % phrases.length;
+
+            }
+
+        }
+
+        setTimeout(
+            typeEffect,
+            deleting ? 45 : 75
+        );
+
+    }
+
+    typeEffect();
+
+
+    /* =========================================================
+       SCROLL REVEAL
+       ========================================================= */
+
+    const revealObserver =
+        new IntersectionObserver(
+            entries => {
+
+                entries.forEach(
+                    entry => {
+
+                        if (
+                            entry.isIntersecting
+                        ) {
+
+                            entry.target
+                                .classList
+                                .add("active");
+
+                        }
+
+                    }
+                );
+
+            },
+            {
+                threshold: 0.12
+            }
+        );
+
+
+    document
+        .querySelectorAll(".reveal")
+        .forEach(
+            element => {
+
+                revealObserver.observe(
+                    element
+                );
+
+            }
+        );
+
+
+    /* =========================================================
+       SKILL BAR ANIMATION
+       ========================================================= */
+
+    const skillObserver =
+        new IntersectionObserver(
+            entries => {
+
+                entries.forEach(
+                    entry => {
+
+                        if (
+                            entry.isIntersecting
+                        ) {
+
+                            const bars =
+                                entry.target
+                                    .querySelectorAll(
+                                        ".skill-progress"
+                                    );
+
+                            bars.forEach(
+                                bar => {
+
+                                    bar.style.width =
+                                        bar.dataset.width;
+
+                                }
+                            );
+
+                        }
+
+                    }
+                );
+
+            },
+            {
+                threshold: 0.25
+            }
+        );
+
+
+    document
+        .querySelectorAll(".skills-grid > div")
+        .forEach(
+            element => {
+
+                skillObserver.observe(
+                    element
+                );
+
+            }
+        );
+
+
+    /* =========================================================
+       CUSTOM CURSOR
+       ========================================================= */
+
+    const cursor =
+        document.querySelector(
+            ".cursor"
+        );
+
+    const cursorDot =
+        document.querySelector(
+            ".cursor-dot"
+        );
+
+
+    document.addEventListener(
+        "mousemove",
+        event => {
+
+            cursor.style.left =
+                event.clientX + "px";
+
+            cursor.style.top =
+                event.clientY + "px";
+
+            cursorDot.style.left =
+                event.clientX + "px";
+
+            cursorDot.style.top =
+                event.clientY + "px";
+
+        }
+    );
+
+
+    document
+        .querySelectorAll("a, button")
+        .forEach(element => {
+
+            element.addEventListener(
+                "mouseenter",
+                () => {
+
+                    cursor.style.width =
+                        "30px";
+
+                    cursor.style.height =
+                        "30px";
+
+                }
+            );
+
+            element.addEventListener(
+                "mouseleave",
+                () => {
+
+                    cursor.style.width =
+                        "12px";
+
+                    cursor.style.height =
+                        "12px";
+
+                }
+            );
+
+        });
+
+
+    /* =========================================================
+       COPY EMAIL
+       ========================================================= */
+
+    function copyEmail() {
+
+        const email =
+            "ladinacalul07@gmail.com";
+
+        navigator.clipboard
+            .writeText(email)
+            .then(() => {
+
+                alert(
+                    "EMAIL COPIED:\n" +
+                    email
+                );
+
+            })
+            .catch(() => {
+
+                alert(
+                    "Email: " +
+                    email
+                );
+
+            });
+
+    }
+
+
+    /* =========================================================
+       DOWNLOAD RESUME
+       ========================================================= */
+
+  function downloadResume() {
+    window.open("resume.pdf", "_blank");
+}
+
+
+    /* =========================================================
+       TERMINAL COMMAND SYSTEM
+       ========================================================= */
+
+    const terminalInput =
+        document.getElementById(
+            "terminalInput"
+        );
+
+    const terminalOutput =
+        document.getElementById(
+            "terminalOutput"
+        );
+
+
+    const commands = {
+
+        help:
+            `Available commands:<br>
+            <span class="response">about</span>
+            — profile information<br>
+            <span class="response">skills</span>
+            — technical capabilities<br>
+            <span class="response">experience</span>
+            — career history<br>
+            <span class="response">education</span>
+            — academic information<br>
+            <span class="response">certs</span>
+            — certifications<br>
+            <span class="response">contact</span>
+            — contact information<br>
+            <span class="response">clear</span>
+            — clear terminal`,
+
+        about:
+            `USER: LADIN L. ACALUL<br>
+            FIELD: COMPUTER ENGINEERING<br>
+            STATUS: AVAILABLE<br>
+            LOCATION: PASAY CITY, PHILIPPINES`,
+
+        skills:
+            `CORE SKILLS:<br>
+            > Computer Literacy<br>
+            > Organizational Skills<br>
+            > Strategic Planning<br>
+            > Computer Literate Assembly<br>
+            > Multitasking<br>
+            > Customer Service`,
+
+        experience:
+            `CAREER LOG:<br>
+            > Tech Support — Zamboanga City Water District<br>
+            > Crew/Frontliner — KCC Mall de Zamboanga<br>
+            > Merchandiser — Acabar Marketing International Inc.<br>
+            > CSR — Alorica by the Bay<br>
+            > CSR — Foundever Ortigas<br>
+            > CSR — Access Healthcare Pasay`,
+
+        education:
+            `EDUCATION:<br>
+            Bachelor of Science in Computer Engineering<br>
+            UZ — Universidad de Zamboanga<br>
+            2020 — 2024`,
+
+        certs:
+            `CERTIFICATIONS:<br>
+            > Cybersecurity Basics<br>
+            > CCNAv7<br>
+            > Linux Essentials<br>
+            > CSS Computer System Servicing NC II<br>
+            > BOSH Safety Officer II`,
+
+        contact:
+            `EMAIL:
+            ladinacalul07@gmail.com<br>
+            PHONE:
+            09126766884<br>
+            LOCATION:
+            Pasay City, Philippines`
+
+    };
+
+
+    terminalInput.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key !== "Enter"
+            ) {
+
+                return;
+
+            }
+
+            const command =
+                terminalInput.value
+                    .trim()
+                    .toLowerCase();
+
+            if (!command) {
+                return;
+            }
+
+
+            const commandLine =
+                document.createElement(
+                    "div"
+                );
+
+            commandLine.innerHTML =
+                `<span class="command">
+                root@ladin:~$ ${command}
+                </span>`;
+
+            terminalOutput.appendChild(
+                commandLine
+            );
+
+
+            if (
+                command === "clear"
+            ) {
+
+                terminalOutput.innerHTML =
+                    "";
+
+            }
+
+            else if (
+                commands[command]
+            ) {
+
+                const response =
+                    document.createElement(
+                        "div"
+                    );
+
+                response.innerHTML =
+                    commands[command];
+
+                response.style.margin =
+                    "8px 0 18px";
+
+                terminalOutput.appendChild(
+                    response
+                );
+
+            }
+
+            else {
+
+                const response =
+                    document.createElement(
+                        "div"
+                    );
+
+                response.innerHTML =
+                    `Command not found:
+                    <span class="response">
+                    ${command}
+                    </span><br>
+                    Type
+                    <span class="response">
+                    help
+                    </span>
+                    for available commands.`;
+
+                response.style.margin =
+                    "8px 0 18px";
+
+                terminalOutput.appendChild(
+                    response
+                );
+
+            }
+
+
+            terminalInput.value = "";
+
+            terminalOutput.scrollTop =
+                terminalOutput.scrollHeight;
+
+        }
+    );
+
+
+    /* =========================================================
+       ACTIVE NAVIGATION
+       ========================================================= */
+
+    const sections =
+        document.querySelectorAll(
+            "section[id]"
+        );
+
+    const navLinks =
+        document.querySelectorAll(
+            ".nav-links a"
+        );
+
+
+    window.addEventListener(
+        "scroll",
+        () => {
+
+            let current = "";
+
+            sections.forEach(
+                section => {
+
+                    const sectionTop =
+                        section.offsetTop -
+                        150;
+
+                    if (
+                        window.scrollY >=
+                        sectionTop
+                    ) {
+
+                        current =
+                            section.getAttribute(
+                                "id"
+                            );
+
+                    }
+
+                }
+            );
+
+
+            navLinks.forEach(
+                link => {
+
+                    link.style.color =
+                        "";
+
+                    if (
+                        link.getAttribute(
+                            "href"
+                        ) === "#" + current
+                    ) {
+
+                        link.style.color =
+                            "var(--green)";
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+
+</script>
+
+</body>
+</html>
